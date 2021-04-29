@@ -5,6 +5,7 @@ const refs = {
   modalWindow: document.querySelector(".lightbox"),
   lightboxImg: document.querySelector(".lightbox__image"),
   btn: document.querySelector('[data-action="close-lightbox"]'),
+  overlay: document.querySelector(".lightbox__overlay"),
 };
 
 // Создание и рендер разметки по массиву данных и предоставленному шаблону
@@ -75,3 +76,8 @@ function clickKey(event) {
     onClickBtnClose();
   }
 }
+
+// Закрытие модального окна по клику на `div.lightbox__overlay`.
+refs.overlay.addEventListener("click", onClickBtnClose);
+
+// - Закрытие модального окна по нажатию клавиши `ESC`.
