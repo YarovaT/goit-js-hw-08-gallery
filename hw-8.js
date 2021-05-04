@@ -5,9 +5,9 @@ const refs = {
   modalWindow: document.querySelector(".js-lightbox"),
   lightboxImg: document.querySelector(".lightbox__image"),
   btn: document.querySelector('[data-action="close-lightbox"]'),
+  overlay: document.querySelector(".lightbox__overlay"),
 };
 
-console.log(galleryItems[1].original);
 // Создание и рендер разметки по массиву данных и предоставленному шаблону
 
 const makeImgTags = ({ preview, original, description }) => {
@@ -38,8 +38,6 @@ refs.imgContainer.addEventListener("click", onClick);
 `button[data-action="close-lightbox"]`.*/
 refs.btn.addEventListener("click", onClickBtnClose);
 
-refs.modalWindow.addEventListener("click", closeModalWindow);
-
 // Открытие модального окна по клику на элементе галереи
 function onClick(evt) {
   evt.preventDefault();
@@ -47,12 +45,12 @@ function onClick(evt) {
   if (evt.target.nodeName !== "IMG") {
     return;
   }
-  if (evt.target.nodeName === "IMG") {
-    refs.modalWindow.classList.add("is-open");
-    // Подмена значения атрибута `src` элемента `img.lightbox__image`.
-    refs.lightboxImg.src = evt.target.dataset.source;
-    refs.lightboxImg.alt = evt.target.alt;
-  }
+
+  refs.modalWindow.classList.add("is-open");
+  // Подмена значения атрибута `src` элемента `img.lightbox__image`.
+  refs.lightboxImg.src = evt.target.dataset.source;
+  refs.lightboxImg.alt = evt.target.alt;
+
   window.addEventListener("keyup", onClickKey);
 }
 
@@ -77,13 +75,52 @@ function onClickKey(event) {
 }
 
 // Закрытие модального окна по клику на `div.lightbox__overlay`.
-refs.modalWindow.addEventListener("click", onClickBtnClose);
-
-// - Закрытие модального окна по нажатию клавиши `ESC`.
-refs.modalWindow.addEventListener("keydown", onClickKey, false);
+refs.overlay.addEventListener("click", closeModalWindow);
 
 /*Пролистывание изображений галереи в открытом модальном окне клавишами "влево"
 и "вправо"*/
+refs.imgContainer.addEventListener("keydown", onArrowRight);
 
+refs.imgContainer.addEventListener("keydown", onArrowLeft);
 
+function onArrowRight(event) {
+  if (event.code === "ArrowRight") {
+    onRightNext();
+  }
+}
 
+function onRightNext() {
+  const currentImg = galleryItems.find(
+    (img) => img.original === refs.lightboxImg.src
+  );
+  let index = currentImg ? galleryItems.indexOf(currentImg) : 0;
+  if (index < galleryItems.length - 1) {
+    index += 1;
+  } else {
+    index = 0;
+  }
+  refs.lightboxImg.src = galleryItems[index].original;
+  refs.lightboxImg.alt = galleryItems[index].alt;
+}
+
+function onArrowLeft(event) {
+  if (event.code === "ArrowLeft") {
+    onLeftNext();
+  }
+}
+
+function onLeftNext() {
+  const currentImg = galleryItems.find(
+    (img) => img.original === refs.lightboxImg.src
+  );
+  let index = currentImg
+    ? galleryItems.indexOf(currentImg)
+    : galleryItems.length - 1;
+  if (index > 0) {
+    index -= 1;
+  } else {
+    galleryItems.length - 1;
+  }
+  refs.lightboxImg.src = galleryItems[index].original;
+  refs.lightboxImg.alt = galleryItems[index].alt;
+}
