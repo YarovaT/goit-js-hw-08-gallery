@@ -60,6 +60,7 @@ function onClickBtnClose() {
   refs.lightboxImg.src = "";
   refs.lightboxImg.alt = "";
   window.removeEventListener("keyup", onClickKey);
+  window.removeEventListener("keydown", onFlipping);
 }
 
 function closeModalWindow(event) {
@@ -79,13 +80,14 @@ refs.overlay.addEventListener("click", closeModalWindow);
 
 /*Пролистывание изображений галереи в открытом модальном окне клавишами "влево"
 и "вправо"*/
-refs.imgContainer.addEventListener("keydown", onArrowRight);
+window.addEventListener("keydown", onFlipping);
 
-refs.imgContainer.addEventListener("keydown", onArrowLeft);
-
-function onArrowRight(event) {
+function onFlipping(event) {
   if (event.code === "ArrowRight") {
     onRightNext();
+  }
+  if (event.code === "ArrowLeft") {
+    onLeftNext();
   }
 }
 
@@ -103,12 +105,6 @@ function onRightNext() {
   refs.lightboxImg.alt = galleryItems[index].alt;
 }
 
-function onArrowLeft(event) {
-  if (event.code === "ArrowLeft") {
-    onLeftNext();
-  }
-}
-
 function onLeftNext() {
   const currentImg = galleryItems.find(
     (img) => img.original === refs.lightboxImg.src
@@ -119,7 +115,7 @@ function onLeftNext() {
   if (index > 0) {
     index -= 1;
   } else {
-    galleryItems.length - 1;
+    index = galleryItems.length - 1;
   }
   refs.lightboxImg.src = galleryItems[index].original;
   refs.lightboxImg.alt = galleryItems[index].alt;
