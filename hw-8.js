@@ -52,6 +52,8 @@ function onClick(evt) {
   refs.lightboxImg.alt = evt.target.alt;
 
   window.addEventListener("keyup", onClickKey);
+
+  window.addEventListener("keydown", onFlipping);
 }
 
 // Очистка значения атрибута `src` элемента `img.lightbox__image`.
@@ -60,6 +62,7 @@ function onClickBtnClose() {
   refs.lightboxImg.src = "";
   refs.lightboxImg.alt = "";
   window.removeEventListener("keyup", onClickKey);
+
   window.removeEventListener("keydown", onFlipping);
 }
 
@@ -80,8 +83,6 @@ refs.overlay.addEventListener("click", closeModalWindow);
 
 /*Пролистывание изображений галереи в открытом модальном окне клавишами "влево"
 и "вправо"*/
-window.addEventListener("keydown", onFlipping);
-
 function onFlipping(event) {
   if (event.code === "ArrowRight") {
     onRightNext();
@@ -102,7 +103,7 @@ function onRightNext() {
     index = 0;
   }
   refs.lightboxImg.src = galleryItems[index].original;
-  refs.lightboxImg.alt = galleryItems[index].alt;
+  refs.lightboxImg.alt = galleryItems[index].description;
 }
 
 function onLeftNext() {
@@ -118,5 +119,5 @@ function onLeftNext() {
     index = galleryItems.length - 1;
   }
   refs.lightboxImg.src = galleryItems[index].original;
-  refs.lightboxImg.alt = galleryItems[index].alt;
+  refs.lightboxImg.alt = galleryItems[index].description;
 }
